@@ -26,7 +26,7 @@ class RecordListFragment : Fragment() {
     ): View? {
 
         viewDataBinding = FragmentRecordListBinding.inflate(inflater, container, false).apply {
-            viewmodel = RecordListViewModel()
+            viewmodel = RecordListViewModel(context!!)
             setLifecycleOwner(viewLifecycleOwner)
         }
 

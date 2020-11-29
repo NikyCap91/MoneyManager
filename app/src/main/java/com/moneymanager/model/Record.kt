@@ -1,9 +1,12 @@
 package com.moneymanager.model
 
-data class Record(
-    val id: String,
-    val content: String,
-    val details: String) {
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import java.util.*
 
-    override fun toString(): String = content
+open class Record(
+    @PrimaryKey var uniqueId: String = "",
+    var content: String = "",
+    var details: String = ""
+): RealmObject() {
 }
