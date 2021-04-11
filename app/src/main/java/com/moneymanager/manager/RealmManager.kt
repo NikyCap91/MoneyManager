@@ -1,7 +1,6 @@
 package com.moneymanager.manager
 
 import android.content.Context
-import com.moneymanager.model.Record
 import com.moneymanager.utils.SingletonHolder
 import io.realm.DynamicRealm
 import io.realm.Realm
@@ -11,8 +10,10 @@ import io.realm.RealmMigration
 class RealmManager private constructor(context: Context){
 
     private var config: RealmConfiguration
+    companion object : SingletonHolder<RealmManager, Context>(::RealmManager)
 
     init {
+
         println("Realm manager init")
         Realm.init(context)
 
@@ -26,10 +27,6 @@ class RealmManager private constructor(context: Context){
         println("Realm manager set config")
         Realm.setDefaultConfiguration(config)
     }
-
-    companion object : SingletonHolder<RealmManager, Context>(::RealmManager)
-
-    fun getRealm() : Realm = Realm.getDefaultInstance()
 
     private class MyRealmMigration : RealmMigration {
 
