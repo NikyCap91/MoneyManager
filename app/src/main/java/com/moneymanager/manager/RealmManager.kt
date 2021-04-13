@@ -2,24 +2,23 @@ package com.moneymanager.manager
 
 import android.content.Context
 import com.moneymanager.MyApplication
-import com.moneymanager.model.Record
 import com.moneymanager.utils.SingletonHolder
 import io.realm.DynamicRealm
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmMigration
-import io.realm.kotlin.createObject
-import java.util.*
 
-class RealmManager private constructor(context: Context){
+class RealmManager private constructor(context: Context) {
 
     private lateinit var config: RealmConfiguration
-    companion object : SingletonHolder<RealmManager, Context>(::RealmManager)
+
+    companion object : SingletonHolder<RealmManager, Context>(::RealmManager) {
+        const val REALM_PATH = "moneymanager.realm"
+    }
 
     init {
 
         initRealmConfiguration(context)
-        initMockData()
         initRawData()
     }
 
@@ -30,40 +29,18 @@ class RealmManager private constructor(context: Context){
 
         println("Realm manager config")
         config = RealmConfiguration.Builder()
-            .name("moneymanager.realm")
-            .schemaVersion(1)
-            .migration(MyRealmMigration())
-            .build()
+                .name(REALM_PATH)
+                .schemaVersion(1)
+                .migration(MyRealmMigration())
+                .build()
 
         println("Realm manager set config")
         Realm.setDefaultConfiguration(config)
     }
 
-    private fun initMockData(){
-
-        println("Get realm")
-        var realm = Realm.getDefaultInstance()
-
-        println("Clean and write records")
-        realm.executeTransaction {
-
-            realm.deleteAll()
-
-            for (i in 1..20) {
-                realm.createObject<Record>(UUID.randomUUID().toString())
-            }
-        }
-
-        println("Close realm")
-        realm.close()
-    }
-
     private fun initRawData() {
 
         val listOfRecords = CsvReader.getData(MyApplication.getMyApplicationContext())
-        
-
-
     }
 
     private class MyRealmMigration : RealmMigration {
@@ -73,9 +50,9 @@ class RealmManager private constructor(context: Context){
             var oldVersion = oldVersion
             val schema = realm.schema
 
-            if(oldVersion == 0L) {
+            if (oldVersion == 0L) {
                 schema.get("Record")!!
-                    .renameField("id","uniqueId")
+                        .renameField("id", "uniqueId")
                 oldVersion++
             }
         }
